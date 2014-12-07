@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<portscope rows="2" columns="1" carrier="tcp">
+    <plot gridx="0"
+          gridy="0"
+          hspan="1"
+          vspan="1"
+          title="Position [deg]"
+          size="1000"
+          minval="0"
+          maxval="80"
+          bgcolor="White">
+        <graph remote="/yarpMinJerk/data:o"
+               index="0"
+               color="Red"
+               title="Reference"
+               type="lines"
+               size="1" />
+        <graph remote="/yarpMinJerk/data:o"
+               index="1"
+               color="Green"
+               title="Plant-Reference"
+               type="lines"
+               size="1" />
+        <graph remote="/yarpMinJerk/data:o"
+               index="2"
+               color="Blue"
+               title="Plant-Output"
+               type="lines"
+               size="1" />
+    </plot>
+    <plot gridx="0"
+          gridy="1"
+          hspan="1"
+          vspan="1"
+          title="Velocity [deg/s]"
+          size="1000"
+          minval="-80"
+          maxval="80"
+          bgcolor="White">
+        <graph remote="/yarpMinJerk/data:o"
+               index="3"
+               color="Green"
+               title="Controller-Reference"
+               type="lines"
+               size="1" />
+        <graph remote="/yarpMinJerk/data:o"
+               index="4"
+               color="Blue"
+               title="Controller-Output"
+               type="lines"
+               size="1" />
+    </plot>
+</portscope>
