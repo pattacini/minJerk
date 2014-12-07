@@ -280,11 +280,13 @@ public:
         ienc->getEncoder(joint,&Controller_U_plant_output);
 
         // Step the model
+        double t0=Time::now();
         Controller_step(Controller_M, Controller_U_reference,
                         Controller_U_enable_compensation, Controller_U_plant_output,
                         &Controller_Y_controller_output,
                         &Controller_Y_controller_reference,
                         &Controller_Y_plant_reference);
+        double t1=Time::now();
         
         ivel->velocityMove(joint,Controller_Y_controller_output);
 
@@ -295,7 +297,9 @@ public:
         out[2]=Controller_U_plant_output;
         out[3]=Controller_Y_controller_reference;
         out[4]=Controller_Y_controller_output;
-        dataOut.write();
+        dataOut.write();        
+
+        yInfo("time elapsed = %g [us]",(t1-t0)*1e6);
 
         return true;
     }
