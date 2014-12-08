@@ -336,6 +336,7 @@ int main(int argc, char *argv[])
     
     CtrlModule mod;
     ResourceFinder rf;
+    rf.configure(argc,argv);
     return mod.runModule(rf);
 }
 
