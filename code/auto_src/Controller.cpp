@@ -3,9 +3,9 @@
 //
 // Code generated for Simulink model 'Controller'.
 //
-// Model version                  : 1.151
+// Model version                  : 1.154
 // Simulink Coder version         : 8.7 (R2014b) 08-Sep-2014
-// C/C++ source code generated on : Sun Dec 07 10:53:13 2014
+// C/C++ source code generated on : Mon Dec 08 12:32:34 2014
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: 32-bit Generic
@@ -25,13 +25,14 @@ void Compensator_Init(DW_Compensator_T *localDW, P_Compensator_T *localP)
 
 // Output and update for atomic system: '<S1>/Compensator'
 void Compensator(real_T rtu_e, boolean_T rtu_reset, B_Compensator_T *localB,
-                 DW_Compensator_T *localDW, P_Compensator_T *localP)
+                 DW_Compensator_T *localDW, P_Compensator_T *localP,
+                 P_Controller_T *Controller_P)
 {
   real_T rtb_IntegralGain;
   real_T Integrator;
 
   // Gain: '<S7>/Integral Gain'
-  rtb_IntegralGain = localP->DiscretePIDController_I * rtu_e;
+  rtb_IntegralGain = Controller_P->Compensator_Ki * rtu_e;
 
   // DiscreteIntegrator: '<S7>/Integrator'
   if (rtu_reset && (localDW->Integrator_PrevResetState <= 0)) {
@@ -46,7 +47,7 @@ void Compensator(real_T rtu_e, boolean_T rtu_reset, B_Compensator_T *localB,
   // Sum: '<S7>/Sum' incorporates:
   //   Gain: '<S7>/Proportional Gain'
 
-  localB->Sum = localP->DiscretePIDController_P * rtu_e + Integrator;
+  localB->Sum = Controller_P->Compensator_Kp * rtu_e + Integrator;
 
   // Update for DiscreteIntegrator: '<S7>/Integrator'
   localDW->Integrator_DSTATE = localP->Integrator_gainval * rtb_IntegralGain +
@@ -253,7 +254,7 @@ void Controller_step(RT_MODEL_Controller_T *const Controller_M, real_T
               Controller_B->RelationalOperator1 ||
               Controller_B->RelationalOperator1_n, &Controller_B->Compensator_k,
               &Controller_DW->Compensator_k, (P_Compensator_T *)
-              &Controller_P->Compensator_k);
+              &Controller_P->Compensator_k, Controller_P);
 
   // End of Outputs for SubSystem: '<S1>/Compensator'
 

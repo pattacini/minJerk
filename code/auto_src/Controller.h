@@ -3,9 +3,9 @@
 //
 // Code generated for Simulink model 'Controller'.
 //
-// Model version                  : 1.151
+// Model version                  : 1.154
 // Simulink Coder version         : 8.7 (R2014b) 08-Sep-2014
-// C/C++ source code generated on : Sun Dec 07 10:53:13 2014
+// C/C++ source code generated on : Mon Dec 08 12:32:34 2014
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: 32-bit Generic
@@ -86,12 +86,6 @@ typedef struct {
 
 // Parameters for system: '<S1>/Compensator'
 struct P_Compensator_T_ {
-  real_T DiscretePIDController_I;      // Mask Parameter: DiscretePIDController_I
-                                       //  Referenced by: '<S7>/Integral Gain'
-
-  real_T DiscretePIDController_P;      // Mask Parameter: DiscretePIDController_P
-                                       //  Referenced by: '<S7>/Proportional Gain'
-
   real_T Integrator_gainval;           // Computed Parameter: Integrator_gainval
                                        //  Referenced by: '<S7>/Integrator'
 
@@ -122,6 +116,12 @@ struct P_ReferencePlant_T_ {
 
 // Parameters (auto storage)
 struct P_Controller_T_ {
+  real_T Compensator_Ki;               // Variable: Compensator_Ki
+                                       //  Referenced by: '<S7>/Integral Gain'
+
+  real_T Compensator_Kp;               // Variable: Compensator_Kp
+                                       //  Referenced by: '<S7>/Proportional Gain'
+
   real_T Plant_IC;                     // Variable: Plant_IC
                                        //  Referenced by:
                                        //    '<S1>/Unit Delay'

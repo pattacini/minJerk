@@ -32,6 +32,12 @@ using namespace yarp::sig;
 static RT_MODEL_Controller_T Controller_M_;
 static RT_MODEL_Controller_T *const Controller_M = &Controller_M_;// Real-time model 
 static P_Controller_T Controller_P = {
+  1.0,                                 // Variable: Compensator_Ki
+                                       //  Referenced by: '<S7>/Integral Gain'
+
+  10.0,                                // Variable: Compensator_Kp
+                                       //  Referenced by: '<S7>/Proportional Gain'
+
   0.0,                                 // Variable: Plant_IC
                                        //  Referenced by:
                                        //    '<S1>/Unit Delay'
@@ -122,12 +128,6 @@ static P_Controller_T Controller_P = {
 
   // Start of '<S1>/Compensator'
   {
-    1.0,                               // Mask Parameter: DiscretePIDController_I
-                                       //  Referenced by: '<S7>/Integral Gain'
-
-    10.0,                              // Mask Parameter: DiscretePIDController_P
-                                       //  Referenced by: '<S7>/Proportional Gain'
-
     0.005,                             // Computed Parameter: Integrator_gainval
                                        //  Referenced by: '<S7>/Integrator'
 
@@ -245,9 +245,12 @@ public:
     bool respond(const Bottle &cmd, Bottle &reply)
     {
         int ack=Vocab::encode("ack");
+        int nack=Vocab::encode("nack");
         int on=Vocab::encode("on");
         int off=Vocab::encode("off");
-        int get=Vocab::encode("get");
+        int status=Vocab::encode("status");
+        int Kp=Vocab::encode("Kp");
+        int Ki=Vocab::encode("Ki");
 
         int sw=cmd.get(0).asVocab();
         if ((sw==on) || (sw==off))
@@ -256,10 +259,48 @@ public:
             reply.addVocab(ack);
             return true;
         }
-        else if (sw==get)
+        else if (sw==status)
         {
             reply.addVocab(ack);
             reply.addVocab(Controller_U_enable_compensation?on:off);
+            return true;
+        }
+        else if (sw==Kp)
+        {
+            if (cmd.size()>1)
+            {
+                if (cmd.get(1).isDouble())
+                {
+                    Controller_P.Compensator_Kp=cmd.get(1).asDouble();
+                    reply.addVocab(ack);
+                }
+                else
+                    reply.addVocab(nack);
+            }
+            else
+            {
+                reply.addVocab(ack);
+                reply.addDouble(Controller_P.Compensator_Kp);
+            }
+            return true;
+        }
+        else if (sw==Ki)
+        {
+            if (cmd.size()>1)
+            {
+                if (cmd.get(1).isDouble())
+                {
+                    Controller_P.Compensator_Ki=cmd.get(1).asDouble();
+                    reply.addVocab(ack);
+                }
+                else
+                    reply.addVocab(nack);
+            }
+            else
+            {
+                reply.addVocab(ack);
+                reply.addDouble(Controller_P.Compensator_Ki);
+            }
             return true;
         }
         else
