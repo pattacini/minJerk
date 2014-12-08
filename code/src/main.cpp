@@ -198,6 +198,7 @@ class CtrlModule: public RFModule
     BufferedPort<Vector> dataIn;
     BufferedPort<Vector> dataOut;
     RpcServer            rpc;
+    Mutex                mutex;
 
 public:
     /******************************************************/
@@ -278,6 +279,8 @@ public:
     /******************************************************/
     bool updateModule()
     {
+        LockGuard guard(mutex);
+
         if (Vector *in=dataIn.read(false))
             Controller_U_reference=(*in)[0];
         ienc->getEncoder(joint,&Controller_U_plant_output);
@@ -331,6 +334,8 @@ public:
     /******************************************************/
     bool respond(const Bottle &cmd, Bottle &reply)
     {
+        LockGuard guard(mutex);
+
         int ack=Vocab::encode("ack");
         int nack=Vocab::encode("nack");
         int on=Vocab::encode("on");
