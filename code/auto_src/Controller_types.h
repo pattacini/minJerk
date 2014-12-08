@@ -3,9 +3,9 @@
 //
 // Code generated for Simulink model 'Controller'.
 //
-// Model version                  : 1.154
+// Model version                  : 1.230
 // Simulink Coder version         : 8.7 (R2014b) 08-Sep-2014
-// C/C++ source code generated on : Mon Dec 08 12:32:34 2014
+// C/C++ source code generated on : Mon Dec 08 18:27:33 2014
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: 32-bit Generic
@@ -15,9 +15,22 @@
 #ifndef RTW_HEADER_Controller_types_h_
 #define RTW_HEADER_Controller_types_h_
 #include "rtwtypes.h"
+#ifndef _DEFINED_TYPEDEF_FOR_CompensatorState_
+#define _DEFINED_TYPEDEF_FOR_CompensatorState_
+
+typedef enum {
+  Off = 0,                             // Default value
+  On,
+  Auto
+} CompensatorState;
+
+#endif
 
 // Parameters for system: '<S1>/Compensator'
 typedef struct P_Compensator_T_ P_Compensator_T;
+
+// Parameters for system: '<S1>/Error Statistics'
+typedef struct P_ErrorStatistics_T_ P_ErrorStatistics_T;
 
 // Parameters for system: '<S1>/Filter'
 typedef struct P_Filter_T_ P_Filter_T;

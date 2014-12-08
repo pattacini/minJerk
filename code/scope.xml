@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<portscope rows="2" columns="1" carrier="tcp">
+<portscope rows="4" columns="1" carrier="tcp">
     <plot gridx="0"
           gridy="0"
           hspan="1"
@@ -47,6 +47,38 @@
                index="4"
                color="Blue"
                title="Controller-Output"
+               type="lines"
+               size="1" />
+    </plot>
+    <plot gridx="0"
+          gridy="2"
+          hspan="1"
+          vspan="1"
+          title="Error Statistics"
+          size="1000"
+          minval="-0.1"
+          maxval="2.0"
+          bgcolor="White">
+        <graph remote="/yarpMinJerk/data:o"
+               index="5"
+               color="Blue"
+               title="Error-Statistics"
+               type="lines"
+               size="1" />
+    </plot>
+    <plot gridx="0"
+          gridy="3"
+          hspan="1"
+          vspan="1"
+          title="Compensator State"
+          size="1000"
+          minval="-1"
+          maxval="2"
+          bgcolor="White">
+        <graph remote="/yarpMinJerk/data:o"
+               index="6"
+               color="Blue"
+               title="Compensator-State"
                type="lines"
                size="1" />
     </plot>
