@@ -32,10 +32,10 @@ using namespace yarp::sig;
 static RT_MODEL_Controller_T Controller_M_;
 static RT_MODEL_Controller_T *const Controller_M = &Controller_M_;// Real-time model 
 static P_Controller_T Controller_P = {
-  0.1,                                 // Variable: AutoCompensator_ThresHystMax
+  0.05,                                // Variable: AutoCompensator_ThresHystMax
                                        //  Referenced by: '<S1>/Compensator Handling'
 
-  0.01,                                // Variable: AutoCompensator_ThresHystMin
+  0.005,                               // Variable: AutoCompensator_ThresHystMin
                                        //  Referenced by: '<S1>/Compensator Handling'
 
   1.0,                                 // Variable: Compensator_Ki
@@ -132,18 +132,6 @@ static P_Controller_T Controller_P = {
   // End of '<S1>/Filter'
   ,
 
-  // Start of '<S1>/Error Statistics'
-  {
-    0.0,                               // Expression: 0
-                                       //  Referenced by: '<S5>/Buffer'
-
-    0.0                                // Expression: 0
-                                       //  Referenced by: '<S5>/Unbuffer'
-
-  }
-  // End of '<S1>/Error Statistics'
-  ,
-
   // Start of '<S1>/Compensator'
   {
     0.005,                             // Computed Parameter: Integrator_gainval
@@ -238,8 +226,8 @@ public:
         Controller_P.Plant_IC=enc;
         Controller_P.Plant_Max=max_joint;
         Controller_P.Plant_Min=min_joint;
-        Controller_P.AutoCompensator_ThresHystMax=1.0;
-        Controller_P.AutoCompensator_ThresHystMin=0.8;
+        Controller_P.AutoCompensator_ThresHystMax=0.5;
+        Controller_P.AutoCompensator_ThresHystMin=0.1;
 
         yInfo("enc=%g in [%g, %g] deg",enc,min_joint,max_joint);
 
@@ -250,13 +238,13 @@ public:
 
         // Initialize model
         Controller_initialize(Controller_M, &Controller_U_reference,
-                              &Controller_U_compensator_state,
-                              &Controller_U_plant_output,
-                              &Controller_Y_controller_output,
-                              &Controller_Y_controller_reference,
-                              &Controller_Y_plant_reference,
-                              &Controller_Y_error_statistics,
-                              &Controller_Y_enable_compensation);
+                            &Controller_U_compensator_state,
+                            &Controller_U_plant_output,
+                            &Controller_Y_controller_output,
+                            &Controller_Y_controller_reference,
+                            &Controller_Y_plant_reference,
+                            &Controller_Y_error_statistics,
+                            &Controller_Y_enable_compensation);
 
         Controller_U_reference=enc;
         Controller_U_compensator_state=CompensatorState::Off;
@@ -287,30 +275,13 @@ public:
 
         // Step the model
         double t0=Time::now();
-        static boolean_T eventFlags[2]={0, 0};// Model has 2 rates
-        static int_T taskCounter[2]={0, 0};
-        if (taskCounter[1]==0)
-            eventFlags[1]=true;
-
-        taskCounter[1]++;
-        if (taskCounter[1]==100)
-            taskCounter[1]=0;
-
-        // Step the model for base rate
-        Controller_step0(Controller_M, Controller_U_reference,
-                         Controller_U_compensator_state, Controller_U_plant_output,
-                         &Controller_Y_controller_output,
-                         &Controller_Y_controller_reference,
-                         &Controller_Y_plant_reference, &Controller_Y_error_statistics,
-                         &Controller_Y_enable_compensation);
-
-        // Step the model for subrate
-        if (eventFlags[1])
-        {
-            // Step the model for subrate 1
-            Controller_step1(Controller_M);
-            eventFlags[1]=false;
-        }
+        // Step the model
+        Controller_step(Controller_M, Controller_U_reference,
+                        Controller_U_compensator_state, Controller_U_plant_output,
+                        &Controller_Y_controller_output,
+                        &Controller_Y_controller_reference,
+                        &Controller_Y_plant_reference, &Controller_Y_error_statistics,
+                        &Controller_Y_enable_compensation);
         double t1=Time::now();
         
         ivel->velocityMove(joint,Controller_Y_controller_output);

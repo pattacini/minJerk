@@ -3,9 +3,9 @@
 //
 // Code generated for Simulink model 'Controller'.
 //
-// Model version                  : 1.230
+// Model version                  : 1.237
 // Simulink Coder version         : 8.7 (R2014b) 08-Sep-2014
-// C/C++ source code generated on : Mon Dec 08 18:27:33 2014
+// C/C++ source code generated on : Tue Dec 09 10:37:33 2014
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: 32-bit Generic
@@ -68,186 +68,72 @@ void Compensator(real_T rtu_e, boolean_T rtu_reset, B_Compensator_T *localB,
 }
 
 // Initial conditions for atomic system: '<S1>/Error Statistics'
-void ErrorStatistics_Init(DW_ErrorStatistics_T *localDW, P_ErrorStatistics_T
-  *localP)
+void ErrorStatistics_Init(DW_ErrorStatistics_T *localDW)
 {
+  int32_T idxIn;
   int32_T i;
 
-  // InitializeConditions for Buffer: '<S5>/Buffer'
-  localDW->Buffer_inBufPtrIdx = 100;
-  localDW->Buffer_bufferLength = 100;
-  localDW->Buffer_outBufPtrIdx = 0;
-
-  // InitializeConditions for S-Function (sdspstatfcns): '<S5>/Mean'
-  localDW->Mean_Iteration = 0U;
-  localDW->Mean_AccVal = 0.0;
-  for (i = 0; i < 200; i++) {
-    // InitializeConditions for Buffer: '<S5>/Buffer'
-    localDW->Buffer_CircBuf[i] = localP->Buffer_ic;
-
-    // InitializeConditions for Unbuffer: '<S5>/Unbuffer'
-    localDW->Unbuffer_CircBuf[i] = localP->Unbuffer_ic;
+  // InitializeConditions for S-Function (sdspsreg2): '<S5>/Delay Line'
+  idxIn = 0;
+  for (i = 0; i < 100; i++) {
+    localDW->DelayLine_Buff[idxIn] = 0.0;
+    idxIn++;
   }
 
-  // InitializeConditions for Unbuffer: '<S5>/Unbuffer'
-  localDW->Unbuffer_inBufPtrIdx = 100;
-  localDW->Unbuffer_bufferLength = 100;
-  localDW->Unbuffer_outBufPtrIdx = 0;
+  localDW->DelayLine_BUFF_OFFSET = 0;
+
+  // End of InitializeConditions for S-Function (sdspsreg2): '<S5>/Delay Line'
 }
 
-// Outputs for atomic system: '<S1>/Error Statistics'
-void ErrorStatisticsTID0(real_T rtu_in, B_ErrorStatistics_T *localB,
-  DW_ErrorStatistics_T *localDW)
+// Output and update for atomic system: '<S1>/Error Statistics'
+void ErrorStatistics(real_T rtu_in, B_ErrorStatistics_T *localB,
+                     DW_ErrorStatistics_T *localDW)
 {
-  int32_T memIdx;
-  int32_T i;
-  int32_T nSampsAtBot;
-  int32_T nSamps;
-  real_T Abs;
+  int32_T yIndx;
+  int32_T idx2;
+  int32_T idx1;
+  int32_T k;
+  real_T rtb_DelayLine[100];
 
-  // Abs: '<S5>/Abs'
-  Abs = std::abs(rtu_in);
-
-  // Buffer: '<S5>/Buffer'
-  nSamps = 1;
-  nSampsAtBot = 200 - localDW->Buffer_inBufPtrIdx;
-  memIdx = localDW->Buffer_inBufPtrIdx;
-  if (nSampsAtBot <= 1) {
-    i = 0;
-    while (i < nSampsAtBot) {
-      localDW->Buffer_CircBuf[localDW->Buffer_inBufPtrIdx] = Abs;
-      i = 1;
-    }
-
-    memIdx = 0;
-    nSamps = 1 - nSampsAtBot;
+  // S-Function (sdspsreg2): '<S5>/Delay Line'
+  for (k = 0; k < 100 - localDW->DelayLine_BUFF_OFFSET; k++) {
+    rtb_DelayLine[k] = localDW->DelayLine_Buff[localDW->DelayLine_BUFF_OFFSET +
+      k];
   }
 
-  for (i = 0; i < nSamps; i++) {
-    localDW->Buffer_CircBuf[memIdx + i] = Abs;
+  idx1 = 100 - localDW->DelayLine_BUFF_OFFSET;
+  for (k = 0; k < localDW->DelayLine_BUFF_OFFSET; k++) {
+    rtb_DelayLine[idx1 + k] = localDW->DelayLine_Buff[k];
   }
 
-  localDW->Buffer_inBufPtrIdx++;
-  if (localDW->Buffer_inBufPtrIdx >= 200) {
-    localDW->Buffer_inBufPtrIdx -= 200;
-  }
-
-  // End of Buffer: '<S5>/Buffer'
-
-  // Unbuffer: '<S5>/Unbuffer'
-  memIdx = localDW->Unbuffer_outBufPtrIdx;
-  if (localDW->Unbuffer_outBufPtrIdx < 0) {
-    memIdx = localDW->Unbuffer_outBufPtrIdx + 200;
-  }
-
-  nSampsAtBot = 200 - memIdx;
-  nSamps = 1;
-  if (nSampsAtBot <= 1) {
-    i = 0;
-    while (i < nSampsAtBot) {
-      localB->Unbuffer = localDW->Unbuffer_CircBuf[memIdx];
-      i = 1;
-    }
-
-    memIdx = 0;
-    nSamps = 1 - nSampsAtBot;
-  }
-
-  for (i = 0; i < nSamps; i++) {
-    localB->Unbuffer = localDW->Unbuffer_CircBuf[memIdx + i];
-  }
-
-  localDW->Unbuffer_outBufPtrIdx = memIdx + nSamps;
-
-  // End of Unbuffer: '<S5>/Unbuffer'
-}
-
-// Outputs for atomic system: '<S1>/Error Statistics'
-void ErrorStatisticsTID1(B_ErrorStatistics_T *localB, DW_ErrorStatistics_T
-  *localDW)
-{
-  int32_T uyIdx;
-  int32_T currentOffset;
-  int32_T i;
-  int32_T nSampsAtBot;
-  int32_T nSamps;
-  real_T rtb_Buffer[100];
-
-  // Buffer: '<S5>/Buffer'
-  uyIdx = 0;
-  currentOffset = localDW->Buffer_outBufPtrIdx;
-  if (localDW->Buffer_outBufPtrIdx < 0) {
-    currentOffset = localDW->Buffer_outBufPtrIdx + 200;
-  }
-
-  nSampsAtBot = 200 - currentOffset;
-  nSamps = 100;
-  if (nSampsAtBot <= 100) {
-    for (i = 0; i < nSampsAtBot; i++) {
-      rtb_Buffer[i] = localDW->Buffer_CircBuf[currentOffset + i];
-    }
-
-    uyIdx = nSampsAtBot;
-    currentOffset = 0;
-    nSamps = 100 - nSampsAtBot;
-  }
-
-  for (i = 0; i < nSamps; i++) {
-    rtb_Buffer[uyIdx + i] = localDW->Buffer_CircBuf[currentOffset + i];
-  }
-
-  localDW->Buffer_outBufPtrIdx = currentOffset + nSamps;
-
-  // End of Buffer: '<S5>/Buffer'
+  // End of S-Function (sdspsreg2): '<S5>/Delay Line'
 
   // S-Function (sdspstatfcns): '<S5>/Mean'
-  uyIdx = 0;
-  for (currentOffset = 0; currentOffset < 100; currentOffset++) {
-    localDW->Mean_Iteration++;
-    if (localDW->Mean_Iteration > 1U) {
-      localDW->Mean_AccVal += rtb_Buffer[uyIdx];
-      localB->Mean[uyIdx] = localDW->Mean_AccVal / (real_T)
-        localDW->Mean_Iteration;
-    } else {
-      if (localDW->Mean_Iteration == 0U) {
-        localDW->Mean_Iteration = 1U;
+  for (k = 0; k < 100; k += 100) {
+    for (idx1 = k; idx1 < k + 1; idx1++) {
+      localDW->Mean_AccVal = rtb_DelayLine[idx1];
+      idx2 = 1;
+      for (yIndx = 98; yIndx >= 0; yIndx += -1) {
+        localDW->Mean_AccVal += rtb_DelayLine[idx1 + idx2];
+        idx2++;
       }
 
-      localDW->Mean_AccVal = rtb_Buffer[uyIdx];
-      localB->Mean[uyIdx] = rtb_Buffer[uyIdx];
+      localB->Mean = localDW->Mean_AccVal / 100.0;
     }
-
-    uyIdx++;
   }
 
   // End of S-Function (sdspstatfcns): '<S5>/Mean'
 
-  // Unbuffer: '<S5>/Unbuffer'
-  uyIdx = 0;
-  nSamps = 100;
-  nSampsAtBot = 200 - localDW->Unbuffer_inBufPtrIdx;
-  currentOffset = localDW->Unbuffer_inBufPtrIdx;
-  if (nSampsAtBot <= 100) {
-    for (i = 0; i < nSampsAtBot; i++) {
-      localDW->Unbuffer_CircBuf[localDW->Unbuffer_inBufPtrIdx + i] =
-        localB->Mean[i];
-    }
+  // Update for S-Function (sdspsreg2): '<S5>/Delay Line' incorporates:
+  //   Abs: '<S5>/Abs'
 
-    uyIdx = nSampsAtBot;
-    currentOffset = 0;
-    nSamps = 100 - nSampsAtBot;
+  localDW->DelayLine_Buff[localDW->DelayLine_BUFF_OFFSET] = std::abs(rtu_in);
+  localDW->DelayLine_BUFF_OFFSET++;
+  while (localDW->DelayLine_BUFF_OFFSET >= 100) {
+    localDW->DelayLine_BUFF_OFFSET -= 100;
   }
 
-  for (i = 0; i < nSamps; i++) {
-    localDW->Unbuffer_CircBuf[currentOffset + i] = localB->Mean[uyIdx + i];
-  }
-
-  localDW->Unbuffer_inBufPtrIdx += 100;
-  if (localDW->Unbuffer_inBufPtrIdx >= 200) {
-    localDW->Unbuffer_inBufPtrIdx -= 200;
-  }
-
-  // End of Unbuffer: '<S5>/Unbuffer'
+  // End of Update for S-Function (sdspsreg2): '<S5>/Delay Line'
 }
 
 //
@@ -327,16 +213,16 @@ void ReferencePlant(real_T rtu_u, B_ReferencePlant_T *localB,
   // End of Update for DiscreteIntegrator: '<S8>/Discrete Integrator'
 }
 
-// Model step function for TID0
-void Controller_step0(RT_MODEL_Controller_T *const Controller_M, real_T
-                      Controller_U_reference, CompensatorState
-                      Controller_U_compensator_state, real_T
-                      Controller_U_plant_output, real_T
-                      *Controller_Y_controller_output, real_T
-                      *Controller_Y_controller_reference, real_T
-                      *Controller_Y_plant_reference, real_T
-                      *Controller_Y_error_statistics, boolean_T
-                      *Controller_Y_enable_compensation) // Sample time: [0.01s, 0.0s] 
+// Model step function
+void Controller_step(RT_MODEL_Controller_T *const Controller_M, real_T
+                     Controller_U_reference, CompensatorState
+                     Controller_U_compensator_state, real_T
+                     Controller_U_plant_output, real_T
+                     *Controller_Y_controller_output, real_T
+                     *Controller_Y_controller_reference, real_T
+                     *Controller_Y_plant_reference, real_T
+                     *Controller_Y_error_statistics, boolean_T
+                     *Controller_Y_enable_compensation)
 {
   P_Controller_T *Controller_P = ((P_Controller_T *)
     Controller_M->ModelData.defaultParam);
@@ -381,8 +267,8 @@ void Controller_step0(RT_MODEL_Controller_T *const Controller_M, real_T
     Controller_DW->UnitDelay_DSTATE;
 
   // Outputs for Atomic SubSystem: '<S1>/Error Statistics'
-  ErrorStatisticsTID0(rtb_e_comp, &Controller_B->ErrorStatistics_p,
-                      &Controller_DW->ErrorStatistics_p);
+  ErrorStatistics(rtb_e_comp, &Controller_B->ErrorStatistics_p,
+                  &Controller_DW->ErrorStatistics_p);
 
   // End of Outputs for SubSystem: '<S1>/Error Statistics'
 
@@ -406,7 +292,7 @@ void Controller_step0(RT_MODEL_Controller_T *const Controller_M, real_T
         // Transition: '<S3>:22'
         Controller_DW->is_c3_Controller = Controller_IN_Select;
       } else {
-        if (Controller_B->ErrorStatistics_p.Unbuffer >
+        if (Controller_B->ErrorStatistics_p.Mean >
             Controller_P->AutoCompensator_ThresHystMax) {
           // Transition: '<S3>:24'
           Controller_DW->is_c3_Controller = Controller_IN_AutomaticOn;
@@ -424,7 +310,7 @@ void Controller_step0(RT_MODEL_Controller_T *const Controller_M, real_T
         // Transition: '<S3>:20'
         Controller_DW->is_c3_Controller = Controller_IN_Select;
       } else {
-        if (Controller_B->ErrorStatistics_p.Unbuffer <
+        if (Controller_B->ErrorStatistics_p.Mean <
             Controller_P->AutoCompensator_ThresHystMin) {
           // Transition: '<S3>:23'
           Controller_DW->is_c3_Controller = Controller_IN_AutomaticOff;
@@ -451,7 +337,7 @@ void Controller_step0(RT_MODEL_Controller_T *const Controller_M, real_T
         Controller_DW->is_c3_Controller = Controller_IN_Select;
       } else {
         // Transition: '<S3>:17'
-        if (Controller_B->ErrorStatistics_p.Unbuffer >
+        if (Controller_B->ErrorStatistics_p.Mean >
             Controller_P->AutoCompensator_ThresHystMax) {
           // Transition: '<S3>:26'
           Controller_DW->is_c3_Controller = Controller_IN_AutomaticOn;
@@ -569,7 +455,7 @@ void Controller_step0(RT_MODEL_Controller_T *const Controller_M, real_T
     Controller_B->ReferencePlant_j.DiscreteIntegrator;
 
   // Outport: '<Root>/error_statistics'
-  *Controller_Y_error_statistics = Controller_B->ErrorStatistics_p.Unbuffer;
+  *Controller_Y_error_statistics = Controller_B->ErrorStatistics_p.Mean;
 
   // Update for UnitDelay: '<S1>/Unit Delay2'
   Controller_DW->UnitDelay2_DSTATE =
@@ -582,21 +468,6 @@ void Controller_step0(RT_MODEL_Controller_T *const Controller_M, real_T
   //   Update for Inport: '<Root>/plant_output'
 
   Controller_DW->UnitDelay_DSTATE = Controller_U_plant_output;
-}
-
-// Model step function for TID1
-void Controller_step1(RT_MODEL_Controller_T *const Controller_M) // Sample time: [1.0s, 0.0s] 
-{
-  B_Controller_T *Controller_B = ((B_Controller_T *)
-    Controller_M->ModelData.blockIO);
-  DW_Controller_T *Controller_DW = ((DW_Controller_T *)
-    Controller_M->ModelData.dwork);
-
-  // Outputs for Atomic SubSystem: '<S1>/Error Statistics'
-  ErrorStatisticsTID1(&Controller_B->ErrorStatistics_p,
-                      &Controller_DW->ErrorStatistics_p);
-
-  // End of Outputs for SubSystem: '<S1>/Error Statistics'
 }
 
 // Model initialize function
@@ -656,7 +527,7 @@ void Controller_initialize(RT_MODEL_Controller_T *const Controller_M, real_T
     Controller_B->ReferencePlant_j.DiscreteIntegrator;
 
   // Start for Outport: '<Root>/error_statistics'
-  *Controller_Y_error_statistics = Controller_B->ErrorStatistics_p.Unbuffer;
+  *Controller_Y_error_statistics = Controller_B->ErrorStatistics_p.Mean;
 
   // InitializeConditions for UnitDelay: '<S1>/Unit Delay2'
   Controller_DW->UnitDelay2_DSTATE = Controller_P->Plant_IC;
@@ -668,8 +539,7 @@ void Controller_initialize(RT_MODEL_Controller_T *const Controller_M, real_T
   Controller_DW->UnitDelay_DSTATE = Controller_P->Plant_IC;
 
   // InitializeConditions for Atomic SubSystem: '<S1>/Error Statistics'
-  ErrorStatistics_Init(&Controller_DW->ErrorStatistics_p, (P_ErrorStatistics_T *)
-                       &Controller_P->ErrorStatistics_p);
+  ErrorStatistics_Init(&Controller_DW->ErrorStatistics_p);
 
   // End of InitializeConditions for SubSystem: '<S1>/Error Statistics'
 

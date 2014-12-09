@@ -3,9 +3,9 @@
 //
 // Code generated for Simulink model 'Controller'.
 //
-// Model version                  : 1.230
+// Model version                  : 1.237
 // Simulink Coder version         : 8.7 (R2014b) 08-Sep-2014
-// C/C++ source code generated on : Mon Dec 08 18:27:33 2014
+// C/C++ source code generated on : Tue Dec 09 10:37:33 2014
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: 32-bit Generic
@@ -46,22 +46,14 @@ typedef struct {
 
 // Block signals for system '<S1>/Error Statistics'
 typedef struct {
-  real_T Mean[100];                    // '<S5>/Mean'
-  real_T Unbuffer;                     // '<S5>/Unbuffer'
+  real_T Mean;                         // '<S5>/Mean'
 } B_ErrorStatistics_T;
 
 // Block states (auto storage) for system '<S1>/Error Statistics'
 typedef struct {
-  real_T Buffer_CircBuf[200];          // '<S5>/Buffer'
-  real_T Unbuffer_CircBuf[200];        // '<S5>/Unbuffer'
+  real_T DelayLine_Buff[100];          // '<S5>/Delay Line'
   real_T Mean_AccVal;                  // '<S5>/Mean'
-  int32_T Buffer_inBufPtrIdx;          // '<S5>/Buffer'
-  int32_T Buffer_outBufPtrIdx;         // '<S5>/Buffer'
-  int32_T Buffer_bufferLength;         // '<S5>/Buffer'
-  int32_T Unbuffer_inBufPtrIdx;        // '<S5>/Unbuffer'
-  int32_T Unbuffer_outBufPtrIdx;       // '<S5>/Unbuffer'
-  int32_T Unbuffer_bufferLength;       // '<S5>/Unbuffer'
-  uint32_T Mean_Iteration;             // '<S5>/Mean'
+  int32_T DelayLine_BUFF_OFFSET;       // '<S5>/Delay Line'
 } DW_ErrorStatistics_T;
 
 // Block signals for system '<S1>/Filter'
@@ -116,16 +108,6 @@ struct P_Compensator_T_ {
 
   real_T Integrator_IC;                // Expression: InitialConditionForIntegrator
                                        //  Referenced by: '<S9>/Integrator'
-
-};
-
-// Parameters for system: '<S1>/Error Statistics'
-struct P_ErrorStatistics_T_ {
-  real_T Buffer_ic;                    // Expression: 0
-                                       //  Referenced by: '<S5>/Buffer'
-
-  real_T Unbuffer_ic;                  // Expression: 0
-                                       //  Referenced by: '<S5>/Unbuffer'
 
 };
 
@@ -202,7 +184,6 @@ struct P_Controller_T_ {
   P_ReferencePlant_T ReferencePlant_j; // '<S1>/Reference Plant'
   P_Filter_T Filter1;                  // '<S1>/Filter1'
   P_Filter_T Filter_i;                 // '<S1>/Filter'
-  P_ErrorStatistics_T ErrorStatistics_p;// '<S1>/Error Statistics'
   P_Compensator_T Compensator_k;       // '<S1>/Compensator'
 };
 
@@ -246,13 +227,12 @@ extern "C" {
     *Controller_Y_controller_output, real_T *Controller_Y_controller_reference,
     real_T *Controller_Y_plant_reference, real_T *Controller_Y_error_statistics,
     boolean_T *Controller_Y_enable_compensation);
-  extern void Controller_step0(RT_MODEL_Controller_T *const Controller_M, real_T
+  extern void Controller_step(RT_MODEL_Controller_T *const Controller_M, real_T
     Controller_U_reference, CompensatorState Controller_U_compensator_state,
     real_T Controller_U_plant_output, real_T *Controller_Y_controller_output,
     real_T *Controller_Y_controller_reference, real_T
     *Controller_Y_plant_reference, real_T *Controller_Y_error_statistics,
     boolean_T *Controller_Y_enable_compensation);
-  extern void Controller_step1(RT_MODEL_Controller_T *const Controller_M);
   extern void Controller_terminate(RT_MODEL_Controller_T *const Controller_M);
 
 #ifdef __cplusplus

@@ -3,9 +3,9 @@
 //
 // Code generated for Simulink model 'Controller'.
 //
-// Model version                  : 1.230
+// Model version                  : 1.237
 // Simulink Coder version         : 8.7 (R2014b) 08-Sep-2014
-// C/C++ source code generated on : Mon Dec 08 18:27:33 2014
+// C/C++ source code generated on : Tue Dec 09 10:37:33 2014
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: 32-bit Generic
@@ -20,11 +20,8 @@ extern void Compensator_Init(DW_Compensator_T *localDW, P_Compensator_T *localP)
 extern void Compensator(real_T rtu_e, boolean_T rtu_reset, B_Compensator_T
   *localB, DW_Compensator_T *localDW, P_Compensator_T *localP, P_Controller_T
   *Controller_P);
-extern void ErrorStatistics_Init(DW_ErrorStatistics_T *localDW,
-  P_ErrorStatistics_T *localP);
-extern void ErrorStatisticsTID0(real_T rtu_in, B_ErrorStatistics_T *localB,
-  DW_ErrorStatistics_T *localDW);
-extern void ErrorStatisticsTID1(B_ErrorStatistics_T *localB,
+extern void ErrorStatistics_Init(DW_ErrorStatistics_T *localDW);
+extern void ErrorStatistics(real_T rtu_in, B_ErrorStatistics_T *localB,
   DW_ErrorStatistics_T *localDW);
 extern void Filter_Init(DW_Filter_T *localDW, P_Filter_T *localP);
 extern void Filter(real_T rtu_e, B_Filter_T *localB, DW_Filter_T *localDW,

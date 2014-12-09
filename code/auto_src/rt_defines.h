@@ -3,9 +3,9 @@
 //
 // Code generated for Simulink model 'Controller'.
 //
-// Model version                  : 1.230
+// Model version                  : 1.237
 // Simulink Coder version         : 8.7 (R2014b) 08-Sep-2014
-// C/C++ source code generated on : Mon Dec 08 18:27:33 2014
+// C/C++ source code generated on : Tue Dec 09 10:37:33 2014
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: 32-bit Generic
