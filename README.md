@@ -1,4 +1,4 @@
 minJerk
 =======
 
-Example of how to model systems with Simulink and generate the code
+Example of how to model systems with Simulink and generate C/C++ code.
