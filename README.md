@@ -32,12 +32,12 @@ equal to `CompensatorState.Auto`. In this case the compensator will automaticall
 switch on/off according to some internal thresholds the use can have access to.
 
 Once done with the simulation, the model can be compiled through the **Simulink Coder**
-to generate the equivalent C++ code already available in https://github.com/pattacini/minJerk/tree/master/code/auto_src.
+to generate the equivalent C++ code already available in [`auto_src`](https://github.com/pattacini/minJerk/tree/master/code/auto_src) directory.
 
 The auto-generated code has a clear interface compose of input and output structures
 and variables so as the structure and variable devoted for the handling of the parameters.
 It's thus straightforward to integrate it in a `Yarp` project to control in velocity a joint
 of the simulator (which should behave like an integrator).
 
-The `scope.xml` file can be used along with the `yarpscope` tool in order to
-visualize the behavior of the overall system.
+The `scope.xml` file can be used along with the [`yarpscope`](http://wiki.icub.org/yarpdoc/yarpscope.html)
+tool in order to visualize the behavior of the overall system.
