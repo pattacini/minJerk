@@ -23,7 +23,7 @@ constantly fed by the error between the response of the actual plant and the
 response of the reference plant (i.e. the pure integrator in this case).
 
 If we enable the compensator by setting the parameter's value equal to
-`CompensatorState.On`, we get a nicer tracking visible below.
+`CompensatorState.On`, we get the nicer tracking visible below.
 
 ![](https://github.com/pattacini/minJerk/blob/master/img/on.png)
 
