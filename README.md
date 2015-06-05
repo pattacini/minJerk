@@ -28,8 +28,8 @@ If we enable the compensator by setting the parameter's value equal to
 ![](https://github.com/pattacini/minJerk/blob/master/img/on.png)
 
 Finally, a third possibility is also given corresponding to the parameter's value
-equal to `CompensatorState.Auto`. In this case the compensator will automatically
-switch on/off according to some internal thresholds the use can have access to.
+equal to `CompensatorState.Auto`. In this case the **PI** compensator will automatically
+switch `on`/`off` according to some internal thresholds the use can have access to.
 
 Once done with the simulation, the model can be compiled through the **Simulink Coder**
 to generate the equivalent C++ code already available in [`auto_src`](https://github.com/pattacini/minJerk/tree/master/code/auto_src) directory.
