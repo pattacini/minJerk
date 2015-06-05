@@ -7,7 +7,7 @@ out of it that can be conveniently interfaced with [`Yarp`](https://github.com/r
 Here's below a picture of the model whose code we want to obtain.
 ![](https://github.com/pattacini/minJerk/blob/master/img/model.png)
 
-Briefly, we have a simple scheme of a well known _Reference Model Controller_
+Briefly, we have a simple scheme of a well known _Reference Model Control_
 approach where the plant is supposed to be a pure integrator but in reality it's not.
 
 Therefore, if we run the simulation with the parameter's value `CompensatorState.Off`,
@@ -39,5 +39,6 @@ and variables so as the structure and variable devoted for the handling of the p
 It's thus straightforward to integrate it in a `Yarp` project to control in velocity a joint
 of the simulator (which should behave like an integrator).
 
-The `scope.xml` file can be used along with the [`yarpscope`](http://wiki.icub.org/yarpdoc/yarpscope.html)
+The [`scope.xml`](https://github.com/pattacini/minJerk/blob/master/code/scope.xml)
+file can be used along with the [`yarpscope`](http://wiki.icub.org/yarpdoc/yarpscope.html)
 tool in order to visualize the behavior of the overall system.
