@@ -16,7 +16,7 @@ we get the following responses.
 ![](https://github.com/pattacini/minJerk/blob/master/img/off.png)
 
 Clearly, the plant output (red) does not follow the desired trajectory (green) accurately
-when the system is provided by the stepwise input (blue).
+when the system is provided with the stepwise input (blue).
 
 To tackle the unknown discrepancies, a **PI** compensator can be designed, which is
 constantly fed by the error between the response of the actual plant and the
