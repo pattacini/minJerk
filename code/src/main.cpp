@@ -16,6 +16,7 @@
 */
 
 #include <string>
+#include <mutex>
 
 #include <yarp/os/all.h>
 #include <yarp/dev/all.h>
@@ -186,7 +187,7 @@ class CtrlModule: public RFModule
     BufferedPort<Vector> dataIn;
     BufferedPort<Vector> dataOut;
     RpcServer            rpc;
-    Mutex                mutex;
+    mutex                mtx;
 
 public:
     /******************************************************/
@@ -267,7 +268,7 @@ public:
     /******************************************************/
     bool updateModule()
     {
-        LockGuard guard(mutex);
+        lock_guard<mutex> lg(mtx);
 
         if (Vector *in=dataIn.read(false))
             Controller_U_reference=(*in)[0];
@@ -305,7 +306,7 @@ public:
     /******************************************************/
     bool respond(const Bottle &cmd, Bottle &reply)
     {
-        LockGuard guard(mutex);
+        lock_guard<mutex> lg(mtx);
 
         int ack=Vocab::encode("ack");
         int nack=Vocab::encode("nack");
