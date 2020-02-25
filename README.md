@@ -2,7 +2,7 @@ Minimum Jerk
 ============
 
 This example shows how to model systems with Simulink to then generate C/C++ code
-out of it that can be conveniently interfaced with [**`Yarp`**](https://github.com/robotology/yarp).
+out of it that can be conveniently interfaced with [**`YARP`**](https://github.com/robotology/yarp).
 
 Here's below a picture of the model whose code we want to obtain.
 
@@ -37,7 +37,7 @@ to generate the equivalent C++ code already available in [`auto_src`](https://gi
 
 The auto-generated code has a clear interface composed of input and output structures
 and variables so as the structure and variable devoted for the handling of the parameters.
-It's thus straightforward to integrate it in a `Yarp` project to control in velocity a joint
+It's thus straightforward to integrate it in a `YARP` project to control in velocity a joint
 of the simulator (which should behave like an integrator).
 
 The [`scope.xml`](https://github.com/pattacini/minJerk/blob/master/code/scope.xml)
