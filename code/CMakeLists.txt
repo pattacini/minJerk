@@ -2,13 +2,10 @@
 # Authors: Ugo Pattacini
 # CopyPolicy: Released under the terms of the GNU GPL v2.0.
 
-cmake_minimum_required(VERSION 2.8)
-set(PROJECTNAME yarpMinJerk)
-project(${PROJECTNAME})
+cmake_minimum_required(VERSION 3.12)
+project(yarpMinJerk)
 
 find_package(YARP)
-list(APPEND CMAKE_MODULE_PATH ${YARP_MODULE_PATH})
-
 find_package(ICUBcontrib)
 list(APPEND CMAKE_MODULE_PATH ${ICUBCONTRIB_MODULE_PATH})
 include(ICUBcontribHelpers)
@@ -16,13 +13,11 @@ include(ICUBcontribOptions)
 icubcontrib_set_default_prefix()
 
 file(GLOB model_files auto_src/*.*)
-set(src_files src/main.cpp)
 source_group("Model Files" FILES ${model_files})
-source_group("Source Files" FILES ${src_files})
 
-include_directories(${YARP_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/auto_src)
-add_executable(${PROJECTNAME} ${model_files} ${src_files})
-target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES})
-install(TARGETS ${PROJECTNAME} DESTINATION bin)
+include_directories(${PROJECT_SOURCE_DIR}/auto_src)
+add_executable(${PROJECT_NAME} ${model_files} src/main.cpp)
+target_link_libraries(${PROJECT_NAME} ${YARP_LIBRARIES})
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 icubcontrib_add_uninstall_target()
 
