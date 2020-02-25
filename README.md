@@ -1,7 +1,7 @@
-minJerk
-=======
+Minimum Jerk
+============
 
-This example shows of how to model systems with Simulink to then generate C/C++ code
+This example shows how to model systems with Simulink to then generate C/C++ code
 out of it that can be conveniently interfaced with [**`Yarp`**](https://github.com/robotology/yarp).
 
 Here's below a picture of the model whose code we want to obtain.
