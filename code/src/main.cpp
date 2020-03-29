@@ -176,15 +176,13 @@ static boolean_T Controller_Y_enable_compensation;
 /******************************************************/
 class CtrlModule: public RFModule
 {
-    PolyDriver drv;
-    IControlMode2 *imod;
-    IInteractionMode *iint;
-    IEncoders *ienc;    
+    PolyDriver        drv;
+    IControlMode     *imod;
+    IEncoders        *ienc;    
     IVelocityControl *ivel;
     int joint;
-    bool compliant;
     
-    BufferedPort<Vector> dataIn;
+    BufferedPort<Bottle> dataIn;
     BufferedPort<Vector> dataOut;
     RpcServer            rpc;
     mutex                mtx;
@@ -193,28 +191,23 @@ public:
     /******************************************************/
     bool configure(ResourceFinder &rf)
     {
-        Time::turboBoost();
-        string name=rf.check("name",Value("yarpMinJerk")).asString().c_str();
-        string robot=rf.check("robot",Value("icubSim")).asString().c_str();
-        string part=rf.check("part",Value("left_arm")).asString().c_str();
+        string name=rf.check("name",Value("yarpMinJerk")).asString();
+        string robot=rf.check("robot",Value("icubSim")).asString();
+        string part=rf.check("part",Value("left_arm")).asString();
         joint=rf.check("joint",Value(3)).asInt();
-        compliant=rf.check("compliant");
 
         Property option;
         option.put("device","remote_controlboard");
-        option.put("remote",("/"+robot+"/"+part).c_str());
-        option.put("local",("/"+name+"/"+part).c_str());
+        option.put("remote","/"+robot+"/"+part);
+        option.put("local","/"+name+"/"+part);
         if (!drv.open(option))
             return false;
 
         drv.view(imod);
-        drv.view(iint);
         drv.view(ienc);
         drv.view(ivel);
 
         imod->setControlMode(joint,VOCAB_CM_VELOCITY);
-        if (compliant)
-            iint->setInteractionMode(joint,VOCAB_IM_COMPLIANT);
 
         IControlLimits *ilim; drv.view(ilim);
         double min_joint,max_joint;
@@ -239,21 +232,21 @@ public:
 
         // Initialize model
         Controller_initialize(Controller_M, &Controller_U_reference,
-                            &Controller_U_compensator_state,
-                            &Controller_U_plant_output,
-                            &Controller_Y_controller_output,
-                            &Controller_Y_controller_reference,
-                            &Controller_Y_plant_reference,
-                            &Controller_Y_error_statistics,
-                            &Controller_Y_enable_compensation);
+                              &Controller_U_compensator_state,
+                              &Controller_U_plant_output,
+                              &Controller_Y_controller_output,
+                              &Controller_Y_controller_reference,
+                              &Controller_Y_plant_reference,
+                              &Controller_Y_error_statistics,
+                              &Controller_Y_enable_compensation);
 
         Controller_U_reference=enc;
         Controller_U_compensator_state=CompensatorState::Off;
         Controller_U_plant_output=enc;        
         
-        dataIn.open(("/"+name+"/data:i").c_str());
-        dataOut.open(("/"+name+"/data:o").c_str());
-        rpc.open(("/"+name+"/rpc").c_str());
+        dataIn.open("/"+name+"/data:i");
+        dataOut.open("/"+name+"/data:o");
+        rpc.open("/"+name+"/rpc");
         attach(rpc);
         
         return true;
@@ -270,8 +263,8 @@ public:
     {
         lock_guard<mutex> lg(mtx);
 
-        if (Vector *in=dataIn.read(false))
-            Controller_U_reference=(*in)[0];
+        if (Bottle *in=dataIn.read(false))
+            Controller_U_reference=in->get(0).asDouble();
         ienc->getEncoder(joint,&Controller_U_plant_output);
 
         // Step the model
@@ -296,7 +289,7 @@ public:
         out[4]=Controller_Y_controller_output;
         out[5]=Controller_Y_error_statistics;
         out[6]=Controller_Y_enable_compensation;
-        dataOut.write();
+        dataOut.writeStrict();
 
         yInfo("time elapsed = %g [us]",(t1-t0)*1e6);
 
@@ -389,8 +382,6 @@ public:
         Controller_terminate(Controller_M);
 
         imod->setControlMode(joint,VOCAB_CM_POSITION);
-        if (compliant)
-            iint->setInteractionMode(joint,VOCAB_IM_STIFF);
         
         rpc.close();
         dataOut.close();
