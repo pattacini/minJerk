@@ -1,11 +1,15 @@
 //
+// Non-Degree Granting Education License -- for use at non-degree
+// granting, nonprofit, educational organizations only. Not for
+// government, commercial, or other organizational use.
+//
 // File: rtwtypes.h
 //
 // Code generated for Simulink model 'Controller'.
 //
-// Model version                  : 1.237
-// Simulink Coder version         : 8.7 (R2014b) 08-Sep-2014
-// C/C++ source code generated on : Tue Dec 09 10:37:33 2014
+// Model version                  : 1.250
+// Simulink Coder version         : 9.3 (R2020a) 18-Nov-2019
+// C/C++ source code generated on : Mon Jul 13 17:57:14 2020
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: 32-bit Generic
@@ -13,8 +17,8 @@
 // Validation result: Not run
 //
 
-#ifndef __RTWTYPES_H__
-#define __RTWTYPES_H__
+#ifndef RTWTYPES_H
+#define RTWTYPES_H
 
 // Logical type definitions
 #if (!defined(__cplusplus))
@@ -26,8 +30,6 @@
 #   define true                        (1U)
 #  endif
 #endif
-
-#define __TMWTYPES__
 
 //=======================================================================*
 //  Target hardware information
@@ -56,8 +58,8 @@ typedef float real32_T;
 typedef double real64_T;
 
 //===========================================================================*
-//  Generic type definitions: real_T, time_T, boolean_T, int_T, uint_T,       *
-//                            ulong_T, char_T and byte_T.                     *
+//  Generic type definitions: boolean_T, char_T, byte_T, int_T, uint_T,       *
+//                            real_T, time_T, ulong_T.                        *
 // ===========================================================================
 typedef double real_T;
 typedef double time_T;
@@ -139,48 +141,17 @@ typedef struct {
 #define MAX_int8_T                     ((int8_T)(127))
 #define MIN_int8_T                     ((int8_T)(-128))
 #define MAX_uint8_T                    ((uint8_T)(255U))
-#define MIN_uint8_T                    ((uint8_T)(0U))
 #define MAX_int16_T                    ((int16_T)(32767))
 #define MIN_int16_T                    ((int16_T)(-32768))
 #define MAX_uint16_T                   ((uint16_T)(65535U))
-#define MIN_uint16_T                   ((uint16_T)(0U))
 #define MAX_int32_T                    ((int32_T)(2147483647))
 #define MIN_int32_T                    ((int32_T)(-2147483647-1))
 #define MAX_uint32_T                   ((uint32_T)(0xFFFFFFFFU))
-#define MIN_uint32_T                   ((uint32_T)(0U))
 
 // Block D-Work pointer type
 typedef void * pointer_T;
 
-// Simulink specific types
-#ifndef __ZERO_CROSSING_TYPES__
-#define __ZERO_CROSSING_TYPES__
-
-// Trigger directions: falling, either, and rising
-typedef enum {
-  FALLING_ZERO_CROSSING = -1,
-  ANY_ZERO_CROSSING = 0,
-  RISING_ZERO_CROSSING = 1
-} ZCDirection;
-
-// Previous state of a trigger signal
-typedef uint8_T ZCSigState;
-
-// Initial value of a trigger zero crossing signal
-#define UNINITIALIZED_ZCSIG            0x03U
-#define NEG_ZCSIG                      0x02U
-#define POS_ZCSIG                      0x01U
-#define ZERO_ZCSIG                     0x00U
-
-// Current state of a trigger signal
-typedef enum {
-  FALLING_ZCEVENT = -1,
-  NO_ZCEVENT = 0,
-  RISING_ZCEVENT = 1
-} ZCEventType;
-
-#endif                                 // __ZERO_CROSSING_TYPES__
-#endif                                 // __RTWTYPES_H__
+#endif                                 // RTWTYPES_H
 
 //
 // File trailer for generated code.
