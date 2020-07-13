@@ -1,6 +1,8 @@
 Minimum Jerk
 ============
 
+[![View Model and code for a minimum-jerk controller on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/51078-model-and-code-for-a-minimum-jerk-controller)
+
 This example shows how to model systems with Simulink to then generate C/C++ code
 out of it that can be conveniently interfaced with [**`YARP`**](https://github.com/robotology/yarp).
 
