@@ -1,0 +1,10 @@
+image: ghcr.io/vvv-school/gitpod:latest
+ports:
+- port: 6080
+  onOpen: notify
+- port: 10000-20000
+  onOpen: ignore
+tasks:
+- init: init-icubcontrib.sh
+- command: start-vnc-session.sh
+- command: gp await-port 6080 && gp preview $(gp url 6080)
