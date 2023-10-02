@@ -2,6 +2,7 @@ Minimum Jerk
 ============
 
 [![View Model and code for a minimum-jerk controller on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/51078-model-and-code-for-a-minimum-jerk-controller)
+[![Open in MATLAB Online](https://www.mathworks.com/images/responsive/global/open-in-matlab-online.svg)](https://matlab.mathworks.com/open/github/v1?repo=pattacini/minJerk&file=model/minJerk.slx)
 
 [![Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer)
 
